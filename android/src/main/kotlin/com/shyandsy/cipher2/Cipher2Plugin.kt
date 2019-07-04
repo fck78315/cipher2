@@ -10,7 +10,11 @@ import javax.crypto.spec.GCMParameterSpec
 import javax.crypto.spec.IvParameterSpec
 import javax.crypto.spec.SecretKeySpec
 import java.security.SecureRandom
-import java.util.Base64
+//import java.util.Base64
+import android.util.Base64 as Base64AD;
+import android.util.Base64.NO_PADDING
+
+import android.util.Base64.DEFAULT as DEFAULT
 
 class Cipher2Plugin: MethodCallHandler {
   @JvmField val NONCE_LENGTH_IN_BYTES = 12
@@ -89,7 +93,9 @@ class Cipher2Plugin: MethodCallHandler {
 
     val ciphertext = cipher.doFinal(dataArray)
 
-    val text = Base64.getEncoder().encodeToString(ciphertext)
+    //val text = Base64.getEncoder().encodeToString(ciphertext)
+    val textad = Base64AD.encodeToString(ciphertext,DEFAULT);
+    val text=textad
 
     result.success(text) 
 
@@ -123,9 +129,17 @@ class Cipher2Plugin: MethodCallHandler {
     }
 
     var dataArray:ByteArray; // = ByteArray(0)
-  
+    var dataArrayad:ByteArray; // = ByteArray(0)
+
     try{
-        dataArray = Base64.getDecoder().decode(data.toByteArray(CHARSET))
+        println("dataxxxaa:")
+        println(data)
+        //dataArray = Base64.getDecoder().decode(data.toByteArray(CHARSET))
+        //println(dataArray.toString(Charsets.UTF_8));
+        dataArrayad = Base64AD.decode(data.toByteArray(CHARSET), DEFAULT)
+        //dataArrayad = Base64AD.encodeToString(data.toByteArray(CHARSET), DEFAULT)
+        println(dataArrayad.toString(CHARSET));
+        dataArray= dataArrayad
         if(dataArray.size % 16 != 0){
           throw IllegalArgumentException("")
         }
@@ -162,7 +176,9 @@ class Cipher2Plugin: MethodCallHandler {
     val secureRandom = SecureRandom()
     val nance = ByteArray(NONCE_LENGTH_IN_BYTES)
     secureRandom.nextBytes(nance)
-    val text = Base64.getEncoder().encodeToString(nance)
+    //val text = Base64.getEncoder().encodeToString(nance)
+    val textad = Base64AD.encodeToString(nance,DEFAULT)
+    val text=textad
     result.success(text)
 
     return
@@ -189,7 +205,9 @@ class Cipher2Plugin: MethodCallHandler {
     // decode nonce from base64 string 
     var nonceArray:ByteArray;
     try{
-      nonceArray = Base64.getDecoder().decode(nonce.toByteArray(CHARSET))
+      //nonceArray = Base64.getDecoder().decode(nonce.toByteArray(CHARSET))
+      val nonceArrayad = Base64AD.decode(nonce.toByteArray(CHARSET),DEFAULT)
+      nonceArray=nonceArrayad
     }catch (e: IllegalArgumentException) {
       result.error(
         "ERROR_INVALID_KEY_OR_IV_LENGTH",
@@ -216,7 +234,9 @@ class Cipher2Plugin: MethodCallHandler {
 
     val ciphertext = cipher.doFinal(dataArray)
 
-    val text = Base64.getEncoder().encodeToString(ciphertext)
+    //val text = Base64.getEncoder().encodeToString(ciphertext)
+    val textad = Base64AD.encodeToString(ciphertext, DEFAULT)
+    var text=textad
 
     result.success(text) 
 
@@ -245,7 +265,9 @@ class Cipher2Plugin: MethodCallHandler {
 
     // deocde the base64 string to get nonce byte array
     try{
-      nonceArray = Base64.getDecoder().decode(nonce.toByteArray(CHARSET))
+      //nonceArray = Base64.getDecoder().decode(nonce.toByteArray(CHARSET))
+      val nonceArrayad = Base64AD.decode(nonce.toByteArray(CHARSET),DEFAULT)
+      nonceArray=nonceArrayad
     }catch (e: IllegalArgumentException) {
       result.error(
         "ERROR_INVALID_KEY_OR_IV_LENGTH",
@@ -257,7 +279,9 @@ class Cipher2Plugin: MethodCallHandler {
 
     // decode the base64 string to get the data byte array
     try{
-        dataArray = Base64.getDecoder().decode(data.toByteArray(CHARSET))
+        //dataArray = Base64.getDecoder().decode(data.toByteArray(CHARSET))
+        val dataArrayad = Base64AD.decode(data.toByteArray(CHARSET),DEFAULT)
+      dataArray=dataArrayad
     }catch (e: IllegalArgumentException) {
       result.error(
         "ERROR_INVALID_ENCRYPTED_DATA",
